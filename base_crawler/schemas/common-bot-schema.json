@@ -1,0 +1,175 @@
+{
+  "type": "object",
+  "properties": {
+    "_id": {
+      "type": "string"
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "relator": {
+          "type": "string"
+        },
+        "tribunal": {
+          "type": "string"
+        },
+        "tribunalOrigem": {
+          "type": "string"
+        },
+        "tipoDecisao": {
+          "type": "string"
+        },
+        "relatorAcordao": {
+          "type": "string"
+        },
+        "classeProcessual": {
+          "type": "string"
+        },
+        "comarca": {
+          "type": "string"
+        },
+        "observacao": {
+          "type": "string"
+        },
+        "numeroProcessoAntigo": {
+          "type": "string"
+        },
+        "acordao": {
+          "type": "string"
+        },
+        "nomeProcesso": {
+          "type": "string"
+        },
+        "numeroProcesso": {
+          "type": "string"
+        },
+        "nomeExtenso": {
+          "type": "string"
+        },
+        "orgaoJulgador": {
+          "type": "string"
+        },
+        "uf": {
+          "type": "string"
+        },
+        "dataJulgamento": {
+          "type": "string",
+          "format": "date"
+        },
+        "dataPublicacao": {
+          "type": "string",
+          "format": "date"
+        },
+        "ementa": {
+          "type": "string"
+        },
+        "ementaSemFormatacao": {
+          "type": "string"
+        },
+        "decisao": {
+          "type": "string"
+        },
+        "jurisprudenciaCitada": {
+          "type": "string"
+        },
+        "indexacao": {
+          "type": "string"
+        },
+        "legislacao": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "referenciaLegislativa": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "area": {
+          "type": "string"
+        },
+        "teseJuridica": {
+          "type": "string"
+        },
+        "recurso": {
+          "type": "string"
+        },
+        "tese": {
+          "type": "string"
+        },
+        "infoComplementarEmenta": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tema": {
+          "type": "string"
+        },
+        "doutrina": {
+          "type": "string"
+        },
+        "partes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "nome": {
+                "type": "string"
+              },
+              "tipo": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "dispositivo": {
+          "type": "string"
+        },
+        "sistema": {
+          "type": "string"
+        },
+        "inteiroTeorArquivo": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "idArquivo": {
+                "type": "string"
+              },
+              "nomeArquivo": {
+                "type": "string"
+              },
+              "urlOriginal": {
+                "type": "string"
+              },
+              "urlUpload": {
+                "type": "string"
+              },
+              "extensao": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "inteiroTeorTexto": {
+          "type": "string"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "processingDate": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "spiderName": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,115 @@
+services:
+    mongo:
+        image: mongo
+        restart: always
+        container_name: mongo
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+        ports:
+            - "27017:27017"
+        volumes:
+            - ${HOME}/docker/base-crawler/data/db:/data/db
+        networks:
+            - servicesnetwork
+
+    rabbitmq:
+        image: rabbitmq:3.8-management-alpine
+        container_name: 'rabbitmq'
+        ports:
+            - 5672:5672
+            - 15672:15672
+        volumes:
+            - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+            - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+        networks:
+            - servicesnetwork
+        healthcheck:
+            test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+            interval: 30s
+            timeout: 30s
+            retries: 3
+
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
+        container_name: elasticsearch
+        environment:
+            - node.name=elasticsearch
+            - cluster.name=es-docker-cluster
+            - cluster.initial_master_nodes=elasticsearch
+            - bootstrap.memory_lock=true
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        volumes:
+            - data01:/usr/share/elasticsearch/data
+        ports:
+            - 9200:9200
+        networks:
+            - servicesnetwork
+
+    kibana:
+        image: docker.elastic.co/kibana/kibana:7.15.1
+        container_name: kibana
+        ports:
+            - 5601:5601
+        links:
+            - elasticsearch
+        environment:
+            ELASTICSEARCH_URL: http://elasticsearch:9200
+            ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+        networks:
+            - servicesnetwork
+
+    base-crawler:
+        container_name: base-crawler
+        restart: on-failure
+        image: base-crawler
+        volumes:
+            - .:/app
+            - ./tests/files/debug:/app/tests/files/debug
+        links:
+            - mongo
+            - rabbitmq
+            - elasticsearch
+            - kibana
+        depends_on:
+            mongo:
+                condition: service_started
+            rabbitmq:
+                condition: service_healthy
+            elasticsearch:
+                condition: service_started
+            kibana:
+                condition: service_started
+        networks:
+            - servicesnetwork
+        environment:
+            MONGO_USER: ${MONGO_USER}
+            MONGO_PASS: ${MONGO_PASS}
+            MONGO_PASSWORD: ${MONGO_PASSWORD}
+            MONGO_HOST: ${MONGO_HOST}
+            MONGO_PORT: ${MONGO_PORT}
+            RABBIT_HOST: ${RABBIT_HOST}
+            RABBIT_USER: ${RABBIT_USER}
+            RABBIT_PASS: ${RABBIT_PASS}
+            ELASTIC_HOST: ${ELASTIC_HOST}
+            CAPTCHA_API_KEY: ${CAPTCHA_API_KEY}
+            ANTI_CAPTCHA_API_KEY: ${ANTI_CAPTCHA_API_KEY}
+            BUCKET_URL: ${BUCKET_URL}
+            SPIDER_NAME: ${SPIDER_NAME}
+            DEBUG_MODE: ${DEBUG_MODE}
+            LOG_DATABASE: ${LOG_DATABASE}
+            LOG_LEVEL: ${LOG_LEVEL}
+            BASE_TO_ANALYSE: ${BASE_TO_ANALYSE}
+            MONGO_DATABASE: "STK_inputs"
+
+networks:
+    servicesnetwork:
+        driver: bridge
+
+volumes:
+    data01:
+        driver: local
